@@ -179,7 +179,7 @@ const toggleTag = (tag: string) => {
 
           <!-- Background Upload -->
           <el-upload
-            class="uploader-box bg-box"
+            class="uploader-box bg-box "
             :show-file-list="false"
             :auto-upload="false"
             :on-change="handleBackgroundChange"
@@ -770,6 +770,39 @@ const toggleTag = (tag: string) => {
     &:hover {
       opacity: 0.9;
     }
+  }
+}
+
+@media (max-width: 768px) {
+  .creator-form {
+    padding-bottom: 80px; // Extra space for mobile bottom safety
+  }
+
+  .upload-row {
+    flex-wrap: wrap;
+  }
+
+  .social-icons-row {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+  
+  .links-list .link-row {
+    gap: 12px;
+  }
+  
+  .links-list .input-wrapper {
+    height: 44px;
+  }
+  
+  .links-list .confirm-btn,
+  .links-list .delete-btn-square {
+    height: 44px;
+    width: 44px;
+    padding: 0; // Icon only style for space saving if needed, or just smaller padding
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 </style>

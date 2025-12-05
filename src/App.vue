@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { House, Document, Message } from '@element-plus/icons-vue'
+import { House, Document, Message, ArrowLeft } from '@element-plus/icons-vue'
 import CreatorForm from './components/CreatorForm.vue'
 import PreviewCard from './components/PreviewCard.vue'
 import type { UserProfile } from './types/user'
@@ -14,11 +14,13 @@ const userProfile = ref<UserProfile>({
   socialLinks: [],
   tags: []
 })
+
+const showMobilePreview = ref(false)
 </script>
 
 <template>
   <div class="app-container">
-    <!-- Global Top Header -->
+    <!-- Global Top Header (Desktop) -->
     <header class="global-header">
       <div class="logo-area">
         <h1>Closr</h1>
@@ -37,6 +39,17 @@ const userProfile = ref<UserProfile>({
         </div>
         <span class="dropdown-arrow">﹀</span>
       </div>
+    </header>
+
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+      <button class="back-btn">
+        <el-icon><ArrowLeft /></el-icon>
+      </button>
+      <h1 class="mobile-title">Become a creator</h1>
+      <button class="preview-toggle-btn" @click="showMobilePreview = !showMobilePreview">
+        {{ showMobilePreview ? 'Close' : 'Preview' }}
+      </button>
     </header>
 
     <div class="main-body">
@@ -69,11 +82,11 @@ const userProfile = ref<UserProfile>({
         <div class="scrollable-content">
           <div class="split-view">
             <div class="form-container">
-              <h2 class="section-title">Become a creator</h2>
+              <h2 class="section-title desktop-only">Become a creator</h2>
               <CreatorForm v-model="userProfile" />
             </div>
             
-            <div class="preview-wrapper-col">
+            <div class="preview-wrapper-col" :class="{ 'mobile-visible': showMobilePreview }">
               <PreviewCard :profile="userProfile" />
             </div>
           </div>
@@ -153,6 +166,45 @@ body {
       color: #999;
       font-size: 12px;
     }
+  }
+}
+
+// Mobile Header (Hidden by default)
+.mobile-header {
+  display: none;
+  height: 56px;
+  padding: 0 16px;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border-bottom: 1px solid #f0f0f0;
+  z-index: 200;
+
+  .back-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .mobile-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .preview-toggle-btn {
+    background: #2979FF;
+    color: #fff;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
   }
 }
 
@@ -254,5 +306,69 @@ body {
   flex-shrink: 0;
   position: sticky;
   top: 0;
+}
+
+// --- Mobile Responsiveness ---
+@media (max-width: 768px) {
+  .global-header {
+    display: none;
+  }
+
+  .mobile-header {
+    display: flex;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  .breadcrumbs-area {
+    display: none;
+  }
+
+  .content-area {
+    background: #fff; // White background on mobile
+  }
+
+  .scrollable-content {
+    padding: 0 16px 40px; // Reduce padding
+  }
+
+  .split-view {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .form-container {
+    padding: 24px 0; // Remove horizontal padding from container
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  .section-title.desktop-only {
+    display: none;
+  }
+
+  // Preview Overlay logic
+  .preview-wrapper-col {
+    position: fixed;
+    top: 56px; // Below header
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: calc(100vh - 56px);
+    background: rgba(255,255,255,0.98);
+    z-index: 300;
+    display: none; // Hidden by default
+    padding: 20px;
+    overflow-y: auto;
+
+    &.mobile-visible {
+      display: flex;
+      justify-content: center;
+    }
+  }
 }
 </style>
